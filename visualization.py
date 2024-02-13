@@ -33,8 +33,40 @@ def visualize_points_vs_fg(player_stats_df):
     else:
         print("DataFrame is empty or does not contain necessary columns. Unable to create the scatter plot.")
 
+import matplotlib.pyplot as plt
+
+def visualize_rebounds(player_stats_df):
+    """
+    Visualize rebounds. OREB + DREB = REB (total)
+    """
+    if not player_stats_df.empty:
+        plt.figure(figsize=(12, 8))
+
+        # Bar graph with distinct colors for OREB and DREB
+        bars = plt.bar(player_stats_df.index, player_stats_df['OREB'], color='orange', label='Offensive Rebounds (OREB)')
+        plt.bar(player_stats_df.index, player_stats_df['DREB'], bottom=player_stats_df['OREB'], color='blue', label='Defensive Rebounds (DREB)')
+
+        # Set x-axis ticks and labels with a 30-degree rotation
+        plt.xticks(player_stats_df.index, player_stats_df['Players'], rotation=30, ha='right')
+
+        # Add actual 'REB' values to the top of each bar
+        for bar, reb in zip(bars, player_stats_df['REB']):
+            plt.text(bar.get_x() + bar.get_width() / 2 - 0.1, reb, f'{reb}', ha='center', va='bottom', color='black', fontweight='bold')
+
+        # Add legend
+        plt.legend()
+
+        plt.xlabel("Players")
+        plt.ylabel("Number of Rebounds")
+        plt.title("Bar Graph of Player Rebounds (OREB and DREB)")
+        plt.show()
+    else:
+        print("DataFrame is empty or does not contain necessary columns. Unable to create the bar graph.")
+
+
 # Main Execution
 player_stats_df = get_data()
 
-# Visualize Points vs. FG%
+# Visualize
 visualize_points_vs_fg(player_stats_df)
+visualize_rebounds(player_stats_df)
